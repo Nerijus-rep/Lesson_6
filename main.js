@@ -7,7 +7,7 @@ $(document).ready(function () {
 
         var $this = $(this);
         var newInputText = $this.val();
-        var inputCount = $(".input-group").length;
+        var inputCount = $(".input-group").length + 1;
 
         if (e.which === 13) {
             e.preventDefault();
@@ -28,31 +28,39 @@ $(document).ready(function () {
     $(document).on("click", ".input-remove", function () {
 
         var checkedCount = $(".input-checkbox:checked").length;
-        var notcheckedCount = $(".input-checkbox:not(':checked')").length;
+        var notcheckedCount = $(".input-checkbox:not(':checked')").length - 1;
+        var checkedCount2 = $(".input-checkbox:not(':checked')").length;
         var all = notcheckedCount + checkedCount;
 
         $(this).parent().remove();
-        $(".items").text("item left " + notcheckedCount);
 
-        if (all < 1) {
+        if (notcheckedCount < 0) {
+            $(".items").text("item left " + checkedCount2);
+
+        } else if (all < 1) {
             $(".nav").hide();
+
+        } else {
+            $(".items").text("item left " + notcheckedCount);
         }
     });
 
 
     $(document).on("click", ".checked-delete", function () {
-
+        
+        var $this = $(this);
         var checkedCount = $(".input-checkbox:checked").length;
         var notcheckedCount = $(".input-checkbox:not(':checked')").length;
-        var all = notcheckedCount + checkedCount;
+        var all = notcheckedCount && checkedCount;
 
         $(".input-checkbox:checked").parent().parent().remove();
 
-        if (checkedCount < 1) {
-            $(".checked-delete").hide();
-
+        if (checkedCount > 0) {
+            $this.hide();
+            
             if (all < 1) {
                 $(".nav").hide();
+                $this.hide();
             }
         }
     });
@@ -73,6 +81,7 @@ $(document).ready(function () {
         } else {
             $this.parent().parent().find('.input-check').removeClass("selected");
             $(".items").text("item left " + footer);
+
             if (checkedCount < 1) {
                 $(".checked-delete").hide();
             }
